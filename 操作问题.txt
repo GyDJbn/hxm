@@ -1,0 +1,46 @@
+按需导入MintUI：...
+一、导入第三插件：
+（原因：babel在将js文件转码为ES5时，默认使用严格模式，而在严格模式下，
+  为了安全起见是不能用caller,callee,arguments等属性的）
+  1.分别在.babelrc文件和.eslintignore文件添加如下规则：(vue-cli 中有那个就都加)
+      【.babelrc文件,在“plugins”:[]后添加】
+      "ignore": [
+          "src/lib/dist/js/mui.min.js"
+        ]
+
+      【.eslintignore文件添加】
+      src/lib/dist/js/mui.min.js
+      **注意 要相对路径正确！~
+
+二、
+  滑动时出现报错警告的解决
+  报错如下 mui.min.js?5dec:8 [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive
+  原因是Chrome为了提高滑动流畅度
+  解决方式是在组件添加样式如下
+  *{
+    touch-action: pan-y;
+  }
+  如果出现地址栏 #/无变化在mui中加入
+  mui('body').on('tap','a',function(){document.location.href=this.href;});
+  文章：https://www.cnblogs.com/bobball/p/7019088.html
+  但是问题并没有解决 可以参考：
+  https://blog.csdn.net/guanhy594230/article/details/83240739
+
+三、tabbel 在做动画切换的时候
+  问题1：有滑动条出现在x轴
+  解决：overflow-x: hidden; 注意使用地方***在app中使用
+  问题2:tabber 底部消失
+  解决：position: absolute;//脱离文档流？？?
+  问题：使用animte.css
+  解决：npm install animate.css --save
+      import animated from 'animate.css' // npm install animate.css --save安装，再引入
+      Vue.use(animated);
+      加载class名使用***必须有animated 名字
+  或者：
+   <transition name="tabber"
+                  mode="out-in"
+                  enter-active-class="animated bounceInLeft">
+        <router-view class="container"/>
+   </transition>
+
+
